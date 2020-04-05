@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Twitter PWA Shortcuts Extension
-// @namespace    http://tampermonkey.net/
+// @namespace    https://chann.dev/
 // @version      0.1
 // @description  Twitter PWA Shortcuts Extension
 // @author       CHANN <chann@chann.kr>
