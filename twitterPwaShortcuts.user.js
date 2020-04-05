@@ -21,7 +21,7 @@ window.addEventListener("keyup", (event) => {
   const keyCode = event.code;
   // console.log(`keyup: ${keyCode}`);
 
-  const popupMenu = document.querySelector("[role=presentation]");
+  const popupMenu = document.querySelector("[role=menu]");
   const closeBtn = document.querySelector("[aria-label=Close]");
   const backBtn = document.querySelector("[aria-label=Back]");
   if (keyCode === "Escape") {
