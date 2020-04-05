@@ -9,14 +9,14 @@
 // ==/UserScript==
 
 // TODO
-const observer = new MutationObserver(mutations => {});
+const observer = new MutationObserver((mutations) => {});
 
 observer.observe(document.body, {
   childList: true,
-  subtree: true
+  subtree: true,
 });
 
-window.addEventListener("keyup", event => {
+window.addEventListener("keyup", (event) => {
   event = event || window.event;
   const keyCode = event.code;
   // console.log(`keyup: ${keyCode}`);
