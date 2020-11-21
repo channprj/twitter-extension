@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Twitter PWA Shortcuts Extension
+// @name         Twitter Extension
 // @namespace    https://chann.dev/
 // @version      0.1
-// @description  Twitter PWA Shortcuts Extension
+// @description  Twitter Extension
 // @author       CHANN <chann@chann.kr>
 // @match        http*://twitter.com/*
 // @run-at       document-end
