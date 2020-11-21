@@ -8,35 +8,41 @@
 // @run-at       document-end
 // ==/UserScript==
 
-// TODO
-const observer = new MutationObserver((mutations) => {});
+const overrideStyle = document.createElement('style')
+overrideStyle.innerHTML = `
+div[lang=ko] {
+  word-break: keep-all;
+  word-wrap: break-word
+}
+`
+document.head.appendChild(overrideStyle)
+
+// TODO: Use MutationObserver
+// const observer = new MutationObserver((mutations) => {});
 
 observer.observe(document.body, {
-  childList: true,
-  subtree: true,
-});
+    childList: true,
+    subtree: true,
+})
 
-window.addEventListener("keyup", (event) => {
-  event = event || window.event;
-  const keyCode = event.code;
-  // console.log(`keyup: ${keyCode}`);
+window.addEventListener('keyup', (event) => {
+    event = event || window.event
+    const keyCode = event.code
 
-  const popupMenu = document.querySelector("[role=menu]");
-  const closeBtn = document.querySelector("[aria-label=Close]");
-  const backBtn = document.querySelector("[aria-label=Back]");
-  if (keyCode === "Escape") {
-    if (popupMenu !== null) {
-      popupMenu.remove();
-      return;
-    } else if (closeBtn !== null) {
-      closeBtn.click();
-      console.log("[ closeBtn ]");
-      return;
-    } else if (backBtn !== null) {
-      backBtn.click();
-      console.log("[ backBtn ]");
-      return;
+    const popupMenu = document.querySelector('[role=menu]')
+    const closeBtn = document.querySelector('[aria-label=Close]')
+    const backBtn = document.querySelector('[aria-label=Back]')
+    if (keyCode === 'Escape') {
+        if (popupMenu !== null) {
+            popupMenu.remove()
+            return
+        } else if (closeBtn !== null) {
+            closeBtn.click()
+            return
+        } else if (backBtn !== null) {
+            backBtn.click()
+            return
+        }
     }
-  }
-});
-window.removeEventListener("keyup");
+})
+window.removeEventListener('keyup')
