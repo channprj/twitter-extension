@@ -15,14 +15,14 @@ Use more keyboard shortcuts and override styles. This UserScript enhance
 
 ### Chrome example:
 
-1. Click *Add to Chrome*
-![how to install step 1](./assets/how-to-install-1.png)
-3. Add extension
-![how to install step 2](./assets/how-to-install-2.png)
+1. Click _Add to Chrome_
+   ![how to install step 1](./assets/how-to-install-1.png)
+1. Add extension
+   ![how to install step 2](./assets/how-to-install-2.png)
 
 > **Step2:** To install this UserScript, simply `click` the `install button` below, or go to the "twitterExtension.user.js" file in the repository and click the "Raw" button in the top right. Your UserScript extension should recognize the script and ask if you would like to install it.
 
-[![Generic badge](https://img.shields.io/badge/Install-UserScript-blue)](https://github.com/channprj/twitter-extension/raw/master/twitterExtension.user.js)
+[![Install UserScript](https://img.shields.io/badge/Install-UserScript-yellow)](https://github.com/channprj/twitter-extension/raw/master/twitterExtension.user.js)
 
 Finally, click on **Install** button and enjoy! :-)
 
