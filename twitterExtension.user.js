@@ -13,7 +13,7 @@ const overrideStyle = document.createElement('style')
 overrideStyle.innerHTML = `
 div[lang=ko] {
   word-break: keep-all;
-  word-wrap: break-word
+  word-wrap: break-word;
 }
 `
 document.head.appendChild(overrideStyle)
