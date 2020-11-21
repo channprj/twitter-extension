@@ -21,28 +21,28 @@ document.head.appendChild(overrideStyle)
 const observer = new MutationObserver((mutations) => {})
 
 observer.observe(document.body, {
-    childList: true,
-    subtree: true,
+  childList: true,
+  subtree: true,
 })
 
 window.addEventListener('keyup', (event) => {
-    event = event || window.event
-    const keyCode = event.code
+  event = event || window.event
+  const keyCode = event.code
 
-    const popupMenu = document.querySelector('[role=menu]')
-    const closeBtn = document.querySelector('[aria-label=Close]')
-    const backBtn = document.querySelector('[aria-label=Back]')
-    if (keyCode === 'Escape') {
-        if (popupMenu !== null) {
-            popupMenu.remove()
-            return
-        } else if (closeBtn !== null) {
-            closeBtn.click()
-            return
-        } else if (backBtn !== null) {
-            backBtn.click()
-            return
-        }
+  const popupMenu = document.querySelector('[role=menu]')
+  const closeBtn = document.querySelector('[aria-label=Close]')
+  const backBtn = document.querySelector('[aria-label=Back]')
+  if (keyCode === 'Escape') {
+    if (popupMenu !== null) {
+      popupMenu.remove()
+      return
+    } else if (closeBtn !== null) {
+      closeBtn.click()
+      return
+    } else if (backBtn !== null) {
+      backBtn.click()
+      return
     }
+  }
 })
 window.removeEventListener('keyup')
