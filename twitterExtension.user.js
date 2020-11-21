@@ -18,7 +18,7 @@ div[lang=ko] {
 document.head.appendChild(overrideStyle)
 
 // TODO: Use MutationObserver
-// const observer = new MutationObserver((mutations) => {});
+const observer = new MutationObserver((mutations) => {})
 
 observer.observe(document.body, {
     childList: true,
