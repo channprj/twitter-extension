@@ -9,6 +9,8 @@
 // @run-at       document-end
 // ==/UserScript==
 
+// Override styles
+// ------------------------------------------------------------
 const overrideStyle = document.createElement('style')
 overrideStyle.innerHTML = `
 div[lang=ko] {
@@ -18,14 +20,8 @@ div[lang=ko] {
 `
 document.head.appendChild(overrideStyle)
 
-// TODO: Use MutationObserver
-const observer = new MutationObserver((mutations) => {})
-
-observer.observe(document.body, {
-  childList: true,
-  subtree: true,
-})
-
+// Keyboard shortcuts
+// ------------------------------------------------------------
 window.addEventListener('keyup', (event) => {
   event = event || window.event
   const keyCode = event.code
@@ -46,4 +42,59 @@ window.addEventListener('keyup', (event) => {
     }
   }
 })
-window.removeEventListener('keyup')
+// window.removeEventListener('keyup')
+
+// TEMP: hongSeonbi translator
+// TODO: Find a new way rather than after 5s
+// ------------------------------------------------------------
+setTimeout(function () {
+  // const timeline = document.querySelector('.css-1dbjc4n > div > div')
+  const timeline = document.querySelector(
+    '[aria-labelledby="accessible-list-0"] > div > div'
+  )
+  console.debug('timeline', timeline)
+  const config = {
+    attributes: true,
+    childList: true,
+    // subtree: true,
+  }
+
+  // Translate seonbi's tweet
+  const hongSeonbi = function (mutationsList) {
+    // console.debug('mutationsList', mutationsList)
+    for (const mutation of mutationsList) {
+      // Find seonbi and translate if timeline updated
+      if (mutation.type === 'childList') {
+        // console.debug('mutation', mutation)
+        mutation.target.children.forEach(function (tweet) {
+          const authorLink = tweet.querySelector(
+            'div > div > article > div > div > div > div:nth-child(2) > div:nth-child(2) > div:first-child > div > div > div:first-child > div:first-child > a'
+          )
+          // console.debug('authorLink', authorLink)
+          if (authorLink) {
+            const targetUsers = [
+              'hong2tu4',
+              'channprj',
+              'CNN',
+              'resten1497',
+              'blurfxo',
+            ]
+            let username = authorLink.getAttribute('href').split('/')[1]
+            console.debug('username', username)
+            if (targetUsers.includes(username)) {
+              const nameElem = authorLink.querySelector(
+                'div > div:first-child > div:first-child > span > span'
+              )
+              nameElem.style.color = 'red'
+            }
+          }
+        })
+        console.debug('mutation.target', mutation.target)
+      } else if (mutation.type === 'attributes') {
+        // mutation.attributeName attribute was modified.
+      }
+    }
+  }
+  const observer = new MutationObserver(hongSeonbi)
+  observer.observe(timeline, config)
+}, 5000)
