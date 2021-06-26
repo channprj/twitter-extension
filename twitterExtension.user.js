@@ -85,6 +85,7 @@ const hongSeonbiTranslator = () => {
                   'BBCWorld',
                   'CNN',
                   'cnnbrk',
+                  'F1',
                   'resten1497',
                   'blurfxo',
                   'nameEO',
@@ -119,18 +120,21 @@ const hongSeonbiTranslator = () => {
   }
 }
 
-// Apply hongSeonbiTranslator with scroll event
+// Apply hongSeonbiTranslator
 hongSeonbiTranslator()
-let timer = null
-window.addEventListener(
-  'scroll',
-  (event) => {
-    if (timer !== null) {
-      clearTimeout(timer)
-    }
-    timer = setTimeout(function () {
-      hongSeonbiTranslator()
-    }, 150)
-  },
-  false
-)
+
+// TODO: Use scroll event if MutationObserver failed
+// hongSeonbiTranslator()
+// let timer = null
+// window.addEventListener(
+//   'scroll',
+//   (event) => {
+//     if (timer !== null) {
+//       clearTimeout(timer)
+//     }
+//     timer = setTimeout(function () {
+//       hongSeonbiTranslator()
+//     }, 150)
+//   },
+//   false
+// )
