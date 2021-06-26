@@ -47,7 +47,7 @@ window.addEventListener('keyup', (event) => {
 // TEMP: hongSeonbi translator
 // TODO: Find a new way rather than after 5s
 // ------------------------------------------------------------
-setTimeout(function () {
+setTimeout(() => {
   // const timeline = document.querySelector('.css-1dbjc4n > div > div')
   const timeline = document.querySelector(
     '[aria-labelledby="accessible-list-0"] > div > div'
@@ -60,13 +60,13 @@ setTimeout(function () {
   }
 
   // Translate seonbi's tweet
-  const hongSeonbi = function (mutationsList) {
+  const hongSeonbi = (mutationsList) => {
     // console.debug('mutationsList', mutationsList)
     for (const mutation of mutationsList) {
       // Find seonbi and translate if timeline updated
       if (mutation.type === 'childList') {
         // console.debug('mutation', mutation)
-        mutation.target.children.forEach(function (tweet) {
+        mutation.target.children.forEach((tweet) => {
           const authorLink = tweet.querySelector(
             'div > div > article > div > div > div > div:nth-child(2) > div:nth-child(2) > div:first-child > div > div > div:first-child > div:first-child > a'
           )
@@ -78,9 +78,14 @@ setTimeout(function () {
               'CNN',
               'resten1497',
               'blurfxo',
+              'nameEO',
+              'haruair',
+              'shiftpsh',
+              'salgujelly',
+              'shiftpsh',
             ]
             let username = authorLink.getAttribute('href').split('/')[1]
-            console.debug('username', username)
+            // console.debug('username', username)
             if (targetUsers.includes(username)) {
               const nameElem = authorLink.querySelector(
                 'div > div:first-child > div:first-child > span > span'
