@@ -20,6 +20,28 @@ div[lang=ko] {
 `
 document.head.appendChild(overrideStyle)
 
+// Override Event
+// ------------------------------------------------------------
+history.pushState = ((f) =>
+  function pushState() {
+    var ret = f.apply(this, arguments)
+    window.dispatchEvent(new Event('pushstate'))
+    window.dispatchEvent(new Event('locationchange'))
+    return ret
+  })(history.pushState)
+
+history.replaceState = ((f) =>
+  function replaceState() {
+    var ret = f.apply(this, arguments)
+    window.dispatchEvent(new Event('replacestate'))
+    window.dispatchEvent(new Event('locationchange'))
+    return ret
+  })(history.replaceState)
+
+window.addEventListener('popstate', () => {
+  window.dispatchEvent(new Event('locationchange'))
+})
+
 // Keyboard shortcuts
 // ------------------------------------------------------------
 window.addEventListener('keyup', (event) => {
@@ -47,7 +69,66 @@ window.addEventListener('keyup', (event) => {
 // TEMP: hongSeonbi translator
 // TODO: Find a new way rather than after 3s
 // ------------------------------------------------------------
-const hongSeonbiTranslator = () => {
+const timelineSelector = () => {
+  // TODO: Change timeline selector when it changed something
+  // const timeline = document.querySelector('.css-1dbjc4n > div > div')
+  // const timeline = document.querySelector(
+  //   '[aria-labelledby="accessible-list-0"] > div > div'
+  // )
+  const timeline = document.querySelector(
+    '[aria-label="Timeline: Your Home Timeline"] > div'
+  )
+  console.debug('timeline', timeline)
+  return timeline
+}
+
+const hongSeonbiMutation = (mutationsList) => {
+  // console.debug('mutationsList', mutationsList)
+  for (const mutation of mutationsList) {
+    // Find seonbi and translate if timeline updated
+    if (mutation.type === 'childList') {
+      // console.debug('mutation', mutation)
+      mutation.target.children.forEach((tweet) => {
+        const authorLink = tweet.querySelector(
+          'div > div > article > div > div > div > div:nth-child(2) > div:nth-child(2) > div:first-child > div > div > div:first-child > div:first-child > a'
+        )
+        // console.debug('authorLink', authorLink)
+        if (authorLink) {
+          const targetUsers = [
+            'hong2tu4',
+            'salgujelly',
+            'channprj',
+            'BBCWorld',
+            'CNN',
+            'cnnbrk',
+            'F1',
+            'resten1497',
+            'blurfxo',
+            'nameEO',
+            'haruair',
+            'shiftpsh',
+            'shiftpsh',
+            '_jeyraof',
+          ]
+          let username = authorLink.getAttribute('href').split('/')[1]
+          // console.debug('username', username)
+          if (targetUsers.includes(username)) {
+            const nameElem = authorLink.querySelector(
+              'div > div:first-child > div:first-child > span > span'
+            )
+            nameElem.style.color = 'red'
+          }
+          // TODO: Translate seonbi's tweet
+        }
+      })
+      console.debug('mutation.target', mutation.target)
+    } else if (mutation.type === 'attributes') {
+      // mutation.attributeName attribute was modified.
+    }
+  }
+}
+
+const hongSeonbiTranslator = (timeout = 3000) => {
   try {
     setTimeout(() => {
       const config = {
@@ -56,75 +137,31 @@ const hongSeonbiTranslator = () => {
         // subtree: true,
       }
 
-      // TODO: Change timeline selector when it changed something
-      // const timeline = document.querySelector('.css-1dbjc4n > div > div')
-      // const timeline = document.querySelector(
-      //   '[aria-labelledby="accessible-list-0"] > div > div'
-      // )
-      const timeline = document.querySelector(
-        '[aria-label="Timeline: Your Home Timeline"] > div'
-      )
-      console.debug('timeline', timeline)
-
-      // Translate seonbi's tweet
-      const hongSeonbi = (mutationsList) => {
-        // console.debug('mutationsList', mutationsList)
-        for (const mutation of mutationsList) {
-          // Find seonbi and translate if timeline updated
-          if (mutation.type === 'childList') {
-            // console.debug('mutation', mutation)
-            mutation.target.children.forEach((tweet) => {
-              const authorLink = tweet.querySelector(
-                'div > div > article > div > div > div > div:nth-child(2) > div:nth-child(2) > div:first-child > div > div > div:first-child > div:first-child > a'
-              )
-              // console.debug('authorLink', authorLink)
-              if (authorLink) {
-                const targetUsers = [
-                  'hong2tu4',
-                  'channprj',
-                  'BBCWorld',
-                  'CNN',
-                  'cnnbrk',
-                  'F1',
-                  'resten1497',
-                  'blurfxo',
-                  'nameEO',
-                  'haruair',
-                  'shiftpsh',
-                  'salgujelly',
-                  'shiftpsh',
-                  '_jeyraof',
-                ]
-                let username = authorLink.getAttribute('href').split('/')[1]
-                // console.debug('username', username)
-                if (targetUsers.includes(username)) {
-                  const nameElem = authorLink.querySelector(
-                    'div > div:first-child > div:first-child > span > span'
-                  )
-                  nameElem.style.color = 'red'
-                }
-              }
-            })
-            console.debug('mutation.target', mutation.target)
-          } else if (mutation.type === 'attributes') {
-            // mutation.attributeName attribute was modified.
-          }
-        }
-      }
-      const observer = new MutationObserver(hongSeonbi)
+      const timeline = timelineSelector()
+      const observer = new MutationObserver(hongSeonbiMutation)
       observer.observe(timeline, config)
-    }, 3000)
+    }, timeout)
   } catch (error) {
     console.debug('hongSeonbiTranslator', error)
     throw error
   }
 }
 
-// Apply hongSeonbiTranslator
+// Apply hongSeonbiTranslator with onpopstate
 hongSeonbiTranslator()
-
-// TODO: Use scroll event if MutationObserver failed
-// hongSeonbiTranslator()
+// window.onpopstate = (event) => {
+//   const targetPath = ['/home', '/hong2tu4', '/salgujelly', '/channprj']
+//   if (targetPath.includes(document.location.pathname)) {
+//     hongSeonbiTranslator(200)
+//   }
+// }
+window.addEventListener('locationchange', () => {
+  const targetPath = ['/home', '/hong2tu4', '/salgujelly', '/channprj']
+  if (targetPath.includes(document.location.pathname)) {
+    hongSeonbiTranslator(200)
+  }
+})
+// TODO: Change failover for timeline selector and MutationObserver
 // let timer = null
 // window.addEventListener(
 //   'scroll',
