@@ -67,7 +67,6 @@ window.addEventListener('keyup', (event) => {
 // window.removeEventListener('keyup')
 
 // TEMP: hongSeonbi translator
-// TODO: Find a new way rather than after 3s
 // ------------------------------------------------------------
 const timelineSelector = () => {
   // TODO: Change timeline selector when it changed something
@@ -75,23 +74,39 @@ const timelineSelector = () => {
   // const timeline = document.querySelector(
   //   '[aria-labelledby="accessible-list-0"] > div > div'
   // )
-  const timeline = document.querySelector(
+  let timeline = document.querySelector(
     '[aria-label="Timeline: Your Home Timeline"] > div'
   )
-  console.debug('timeline', timeline)
+  if (timeline === null) {
+    const labelArray = document.querySelectorAll('*[aria-label]')
+    for (let i = 0; i < labelArray.length; i++) {
+      const labelText = labelArray[i].ariaLabel
+      if (labelText.includes('Timeline:') && labelText.includes('Tweets')) {
+        timeline = labelArray[i].querySelector('div')
+      }
+    }
+  }
+  console.debug('timelineSelector:timeline', timeline)
   return timeline
 }
 
 const hongSeonbiMutation = (mutationsList) => {
+  console.debug('hongSeonbiMutation:mutationsList', mutationsList)
   // console.debug('mutationsList', mutationsList)
   for (const mutation of mutationsList) {
     // Find seonbi and translate if timeline updated
     if (mutation.type === 'childList') {
       // console.debug('mutation', mutation)
       mutation.target.children.forEach((tweet) => {
-        const authorLink = tweet.querySelector(
+        let authorSelector =
           'div > div > article > div > div > div > div:nth-child(2) > div:nth-child(2) > div:first-child > div > div > div:first-child > div:first-child > a'
-        )
+        // Reassign the author selector for target user timeline
+        const targetUserTimeline = ['/hong2tu4', '/salgujelly', '/channprj']
+        if (targetUserTimeline.includes(document.location.pathname)) {
+          authorSelector =
+            'div > div > article > div > div > div > div:nth-child(2) > div:nth-child(2) > div:first-child > div > div > div:first-child > div:first-child > a'
+        }
+        const authorLink = tweet.querySelector(authorSelector)
         // console.debug('authorLink', authorLink)
         if (authorLink) {
           const targetUsers = [
@@ -130,6 +145,7 @@ const hongSeonbiMutation = (mutationsList) => {
 
 const hongSeonbiTranslator = (timeout = 3000) => {
   try {
+    // TODO: Find a new way rather than after 3s
     setTimeout(() => {
       const config = {
         attributes: true,
@@ -138,29 +154,35 @@ const hongSeonbiTranslator = (timeout = 3000) => {
       }
 
       const timeline = timelineSelector()
+      console.debug('hongSeonbiTranslator:timeline', timeline)
       const observer = new MutationObserver(hongSeonbiMutation)
+      console.debug('hongSeonbiTranslator:observer', observer)
       observer.observe(timeline, config)
     }, timeout)
   } catch (error) {
-    console.debug('hongSeonbiTranslator', error)
+    console.error('hongSeonbiTranslator', error)
     throw error
   }
 }
 
-// Apply hongSeonbiTranslator with onpopstate
+// Apply hongSeonbiTranslator with custom event listener
 hongSeonbiTranslator()
+window.addEventListener('locationchange', () => {
+  console.debug(
+    'window.addEventListener.locationchange',
+    document.location.pathname
+  )
+  const targetPath = ['/home', '/hong2tu4', '/salgujelly', '/channprj']
+  if (targetPath.includes(document.location.pathname)) {
+    hongSeonbiTranslator()
+  }
+})
 // window.onpopstate = (event) => {
 //   const targetPath = ['/home', '/hong2tu4', '/salgujelly', '/channprj']
 //   if (targetPath.includes(document.location.pathname)) {
 //     hongSeonbiTranslator(200)
 //   }
 // }
-window.addEventListener('locationchange', () => {
-  const targetPath = ['/home', '/hong2tu4', '/salgujelly', '/channprj']
-  if (targetPath.includes(document.location.pathname)) {
-    hongSeonbiTranslator(200)
-  }
-})
 // TODO: Change failover for timeline selector and MutationObserver
 // let timer = null
 // window.addEventListener(
